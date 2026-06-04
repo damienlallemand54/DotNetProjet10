@@ -2,7 +2,7 @@
 
 namespace PatientService.Services
 {
-    public interface IPatientService
+    public interface IPatientManagementService
     {
         Task<IEnumerable<PatientReadDTO>> GetAllPatientsAsync();
         Task<PatientReadDTO?> GetPatientByIdAsync(int id);

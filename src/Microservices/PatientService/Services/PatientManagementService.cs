@@ -4,11 +4,11 @@ using PatientService.Repositories;
 
 namespace PatientService.Services
 {
-    public class PatientService : IPatientService
+    public class PatientManagementService : IPatientManagementService
     {
         private readonly IPatientRepository _repository;
 
-        public PatientService(IPatientRepository repository)
+        public PatientManagementService(IPatientRepository repository)
         {
             _repository = repository;
         }
