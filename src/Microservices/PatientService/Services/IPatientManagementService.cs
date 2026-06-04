@@ -1,0 +1,12 @@
+﻿using PatientService.DTOs;
+
+namespace PatientService.Services
+{
+    public interface IPatientService
+    {
+        Task<IEnumerable<PatientReadDTO>> GetAllPatientsAsync();
+        Task<PatientReadDTO?> GetPatientByIdAsync(int id);
+        Task<PatientReadDTO> CreatePatientAsync(PatientCreateDTO createDto);
+        Task<bool> UpdatePatientAsync(int id, PatientUpdateDTO updateDto);
+    }
+}
