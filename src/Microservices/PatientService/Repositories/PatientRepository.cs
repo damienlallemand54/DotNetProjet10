@@ -31,10 +31,13 @@ namespace PatientService.Repositories
         {
             _context.Patients.Update(patient);
         }
-
+        public void Delete(Patient patient)
+        {
+            _context.Patients.Remove(patient);
+        }
         public async Task<bool> SaveChangesAsync()
         {
-            return (await _context.SaveChangesAsync()) >= 0;
+            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }

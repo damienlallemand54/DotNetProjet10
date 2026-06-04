@@ -61,5 +61,17 @@ namespace PatientService.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var success = await _patientService.DeletePatientAsync(id);
+            if (!success)
+            {
+                return NotFound($"Impossible de supprimer : le patient avec l'ID {id} n'existe pas.");
+            }
+
+            return NoContent();
+        }
     }
 }

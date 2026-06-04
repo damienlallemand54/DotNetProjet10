@@ -8,6 +8,7 @@ namespace PatientService.Repositories
         Task<Patient?> GetByIdAsync(int id);
         Task AddAsync(Patient patient);
         void Update(Patient patient);
+        void Delete(Patient patient);
         Task<bool> SaveChangesAsync();
     }
 }

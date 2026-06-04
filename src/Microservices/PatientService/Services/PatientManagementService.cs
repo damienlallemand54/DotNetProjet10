@@ -66,6 +66,15 @@ namespace PatientService.Services
             return await _repository.SaveChangesAsync();
         }
 
+        public async Task<bool> DeletePatientAsync(int id)
+        {
+            var existingPatient = await _repository.GetByIdAsync(id);
+            if (existingPatient == null) return false;
+
+            _repository.Delete(existingPatient);
+            return await _repository.SaveChangesAsync();
+        }
+
         // Méthodes d'aide au Mapping et calcul d'âge
         private static PatientReadDTO MapToReadDTO(Patient patient)
         {
