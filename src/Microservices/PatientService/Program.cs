@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PatientService.Data;
+using PatientService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<PatientDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
 builder.Services.AddControllers();
 
