@@ -83,6 +83,7 @@ namespace PatientService.Services
                 Id = patient.Id,
                 FirstName = patient.FirstName,
                 LastName = patient.LastName,
+                BirthDate = patient.BirthDate,
                 Gender = patient.Gender,
                 Address = patient.Address,
                 PhoneNumber = patient.PhoneNumber,
