@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PatientService.Entities;
 
 namespace PatientService.Data
 {
-    public class PatientDbContext : DbContext
-    {   
+    public class PatientDbContext : IdentityDbContext<IdentityUser>
+    {
         public PatientDbContext(DbContextOptions<PatientDbContext> options) : base(options)
         {
         }
