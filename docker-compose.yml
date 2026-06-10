@@ -1,0 +1,50 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "MediLabo_Strong@Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - medilabo-network
+
+  patientservice:
+    build: ./src/Microservices/PatientService
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=Projet10_PatientDb;User Id=sa;Password=MediLabo_Strong@Passw0rd;TrustServerCertificate=True
+    networks:
+      - medilabo-network
+
+  authservice:
+    build: ./src/Microservices/AuthService
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=Projet10_AuthDb;User Id=sa;Password=MediLabo_Strong@Passw0rd;TrustServerCertificate=True
+      - Jwt__Key=MedilaboSuperSecretKey12345678901
+      - Jwt__Issuer=AuthService
+      - Jwt__Audience=MedilaboApp
+    networks:
+      - medilabo-network
+
+  gatewayservice:
+    build: ./src/Microservices/GatewayService
+    ports:
+      - "5000:8080"
+    depends_on:
+      - patientservice
+      - authservice
+    environment:
+      - Jwt__Key=MedilaboSuperSecretKey12345678901
+      - Jwt__Issuer=AuthService
+      - Jwt__Audience=MedilaboApp
+    networks:
+      - medilabo-network
+
+networks:
+  medilabo-network:
+    driver: bridge
