@@ -7,8 +7,11 @@ Application de détection du diabète de type 2, construite en architecture micr
 | Service | Rôle |
 
 | PatientService | Gestion des dossiers patients (CRUD) |
+
 | GatewayService | Point d'entrée unique via Ocelot |
+
 | AuthService | Authentification et génération de JWT |
+
 | Frontend | Interface utilisateur |
 
 ## Stack technique
