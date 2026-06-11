@@ -21,9 +21,15 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Seed utilisateur admin
 using (var scope = app.Services.CreateScope())
 {
+    // On récupère AuthDbContext
+    var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+
+    // On crée la base Projet10_AuthDb et les tables associées dans Docker
+    context.Database.Migrate();
+
+    // Seed utilisateur admin
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     var adminEmail = "admin@medilabo.com";
     if (await userManager.FindByEmailAsync(adminEmail) == null)

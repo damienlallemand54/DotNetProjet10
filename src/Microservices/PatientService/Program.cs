@@ -21,6 +21,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+using (var scope = app.Services.CreateScope())
+{
+    // On récupère PatientDbContext
+    var context = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
+
+    // On crée la base Projet10_PatientDb et la table Patient dans Docker
+    context.Database.Migrate();
+
+}
 
 app.UseHttpsRedirection();
 app.MapControllers();

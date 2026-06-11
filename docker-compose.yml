@@ -55,6 +55,7 @@ services:
       - GatewayUrl=http://gatewayservice:8080
     networks:
       - medilabo-network
+
 networks:
   medilabo-network:
     driver: bridge
