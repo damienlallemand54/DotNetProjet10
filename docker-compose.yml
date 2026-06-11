@@ -45,6 +45,16 @@ services:
     networks:
       - medilabo-network
 
+  frontendservice:
+    build: ./src/Microservices/FrontendService
+    ports:
+      - "5003:8080"
+    depends_on:
+      - gatewayservice
+    environment:
+      - GatewayUrl=http://gatewayservice:8080
+    networks:
+      - medilabo-network
 networks:
   medilabo-network:
     driver: bridge
