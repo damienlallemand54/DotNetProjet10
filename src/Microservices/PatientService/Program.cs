@@ -29,6 +29,10 @@ using (var scope = app.Services.CreateScope())
     // On crée la base Projet10_PatientDb et la table Patient dans Docker
     context.Database.Migrate();
 
+    // On utilise les patients tests pour remplir la bdd
+    await DataSeeder.SeedAsync(context);
+
+
 }
 
 app.UseHttpsRedirection();

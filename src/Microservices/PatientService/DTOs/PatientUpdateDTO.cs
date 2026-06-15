@@ -11,7 +11,7 @@ namespace PatientService.DTOs
         public required string LastName { get; set; }
 
         [Required(ErrorMessage = "La date de naissance est obligatoire.")]
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
 
         [Required(ErrorMessage = "Le genre est obligatoire.")]
         public required string Gender { get; set; }

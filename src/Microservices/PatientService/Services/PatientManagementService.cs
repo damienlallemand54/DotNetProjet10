@@ -91,12 +91,11 @@ namespace PatientService.Services
             };
         }
 
-        private static int CalculateAge(DateTime birthDate)
+        private static int CalculateAge(DateOnly birthDate)
         {
-            var today = DateTime.Today;
+            var today = DateOnly.FromDateTime(DateTime.Today);
             var age = today.Year - birthDate.Year;
-            // Gestion cas où l'anniversaire n'est pas encore passé cette année
-            if (birthDate.Date > today.AddYears(-age)) age--;
+            if (birthDate > today.AddYears(-age)) age--;
             return age;
         }
     }
