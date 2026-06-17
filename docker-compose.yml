@@ -45,6 +45,21 @@ services:
     networks:
       - medilabo-network
 
+  mongodb:
+    image: mongo:latest
+    networks:
+      - medilabo-network
+
+  noteservice:
+    build: ./src/Microservices/NoteService
+    depends_on:
+      - mongodb
+    environment:
+      - ConnectionStrings__MongoDB=mongodb://mongodb:27017
+      - MongoDB__DatabaseName=Projet10_NoteDb
+    networks:
+      - medilabo-network
+
   frontendservice:
     build: ./src/Microservices/FrontendService
     ports:

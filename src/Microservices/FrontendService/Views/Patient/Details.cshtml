@@ -56,4 +56,23 @@
             }
         </div>
     </div>
+    <div class="card shadow">
+        <div class="card-header bg-light">
+            <h4 class="mb-0">Ajouter une observation</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddNote" method="post">
+
+                <input type="hidden" name="PatientId" value="@Model.Patient.Id" />
+                <input type="hidden" name="PatientName" value="@Model.Patient.LastName @Model.Patient.FirstName" />
+
+                <div class="mb-3">
+                    <textarea name="Content" class="form-control" rows="4" placeholder="Saisissez les notes de la visite en cours" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">Enregistrer la note</button>
+            </form>
+        </div>
+    </div>
 </div>
+
