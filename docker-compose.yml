@@ -7,6 +7,8 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
     networks:
       - medilabo-network
 
@@ -47,6 +49,8 @@ services:
 
   mongodb:
     image: mongo:latest
+    volumes:
+      - mongo-data:/data/db
     networks:
       - medilabo-network
 
@@ -74,3 +78,7 @@ services:
 networks:
   medilabo-network:
     driver: bridge
+
+volumes :
+  mongo-data:
+  mssql-data: 
