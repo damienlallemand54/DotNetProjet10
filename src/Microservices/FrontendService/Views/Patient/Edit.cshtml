@@ -10,8 +10,11 @@
             <h2 class="mb-0">Modifier le dossier patient</h2>
         </div>
         <div class="card-body">
-            <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-                <div asp-validation-summary="All" class="alert alert-danger"></div>
+            <form asp-action="Edit" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div asp-validation-summary="All" class="alert alert-danger"></div>
+                }
 
                 <div class="mb-3">
                     <label asp-for="LastName" class="form-label">Nom</label>

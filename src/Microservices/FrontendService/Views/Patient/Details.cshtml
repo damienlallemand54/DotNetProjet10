@@ -33,8 +33,12 @@
                 <dd class="col-sm-9">@(Model.Patient.PhoneNumber ?? "Non renseigné")</dd>
             </dl>
         </div>
-        <div class="card-footer">
+        <div class="card-footer d-flex justify-content-between">
             <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+
+            <a asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-warning text-dark">
+                <i class="bi bi-pencil"></i> Modifier les informations
+            </a>
         </div>
     </div>
 
