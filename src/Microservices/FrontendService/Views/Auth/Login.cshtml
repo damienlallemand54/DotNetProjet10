@@ -19,7 +19,10 @@
             <h2 class="card-title text-center mb-4">MédiLabo Solutions</h2>
 
             <form asp-action="Login" method="post">
-                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div asp-validation-summary="All" class="alert alert-danger"></div>
+                }
 
                 <div class="mb-3">
                     <label asp-for="Email" class="form-label">Email</label>

@@ -41,19 +41,29 @@ namespace FrontendService.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var client = CreateAuthenticatedClient();
-            var response = await client.GetAsync($"/api/patient/{id}");
 
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            var patientResponse = await client.GetAsync($"/api/patient/{id}");
+            if (patientResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 return RedirectToAction("Login", "Auth");
-
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (patientResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
                 return NotFound();
 
-            var json = await response.Content.ReadAsStringAsync();
-            var patient = JsonSerializer.Deserialize<PatientViewModel>(json,
+            var patientJson = await patientResponse.Content.ReadAsStringAsync();
+            var patient = JsonSerializer.Deserialize<PatientViewModel>(patientJson,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return View(patient);
+            var notesResponse = await client.GetAsync($"/api/note/patient/{id}");
+            var notesJson = await notesResponse.Content.ReadAsStringAsync();
+            var notes = JsonSerializer.Deserialize<List<NoteViewModel>>(notesJson,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<NoteViewModel>();
+
+            var viewModel = new PatientDetailsViewModel
+            {
+                Patient = patient!,
+                Notes = notes
+            };
+
+            return View(viewModel);
         }
     }
 }
