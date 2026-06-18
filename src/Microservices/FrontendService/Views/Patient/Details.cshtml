@@ -4,79 +4,92 @@
     ViewData["Title"] = "Détail patient";
 }
 
-<div class="container mt-4">
-    <div class="card shadow mb-4">
-        <div class="card-header bg-primary text-white">
-            <h2 class="mb-0">Dossier patient — @Model.Patient.LastName @Model.Patient.FirstName</h2>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Nom</dt>
-                <dd class="col-sm-9">@Model.Patient.LastName</dd>
-
-                <dt class="col-sm-3">Prénom</dt>
-                <dd class="col-sm-9">@Model.Patient.FirstName</dd>
-
-                <dt class="col-sm-3">Date de naissance</dt>
-                <dd class="col-sm-9">@Model.Patient.BirthDate.ToString("dd/MM/yyyy")</dd>
-
-                <dt class="col-sm-3">Âge</dt>
-                <dd class="col-sm-9">@Model.Patient.Age ans</dd>
-
-                <dt class="col-sm-3">Genre</dt>
-                <dd class="col-sm-9">@Model.Patient.Gender</dd>
-
-                <dt class="col-sm-3">Adresse</dt>
-                <dd class="col-sm-9">@(Model.Patient.Address ?? "Non renseignée")</dd>
-
-                <dt class="col-sm-3">Téléphone</dt>
-                <dd class="col-sm-9">@(Model.Patient.PhoneNumber ?? "Non renseigné")</dd>
-            </dl>
-        </div>
-        <div class="card-footer d-flex justify-content-between">
-            <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
-
-            <a asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-warning text-dark">
-                <i class="bi bi-pencil"></i> Modifier les informations
-            </a>
-        </div>
+@if (Model?.Patient == null)
+{
+    <div class="container mt-4">
+        <div class="alert alert-warning">Patient introuvable.</div>
+        <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
     </div>
+}
+else
+{
+    <div class="container mt-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Dossier patient — @Model.Patient.LastName @Model.Patient.FirstName</h2>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Nom</dt>
+                    <dd class="col-sm-9">@Model.Patient.LastName</dd>
 
-    <div class="card shadow">
-        <div class="card-header bg-secondary text-white">
-            <h3 class="mb-0">Notes du médecin</h3>
+                    <dt class="col-sm-3">Prénom</dt>
+                    <dd class="col-sm-9">@Model.Patient.FirstName</dd>
+
+                    <dt class="col-sm-3">Date de naissance</dt>
+                    <dd class="col-sm-9">@Model.Patient.BirthDate.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-3">Âge</dt>
+                    <dd class="col-sm-9">@Model.Patient.Age ans</dd>
+
+                    <dt class="col-sm-3">Genre</dt>
+                    <dd class="col-sm-9">@Model.Patient.Gender</dd>
+
+                    <dt class="col-sm-3">Adresse</dt>
+                    <dd class="col-sm-9">@(Model.Patient.Address ?? "Non renseignée")</dd>
+
+                    <dt class="col-sm-3">Téléphone</dt>
+                    <dd class="col-sm-9">@(Model.Patient.PhoneNumber ?? "Non renseigné")</dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+
+                <a asp-action="Edit" asp-route-id="@Model.Patient.Id" class="btn btn-warning text-dark">
+                    <i class="bi bi-pencil"></i> Modifier les informations
+                </a>
+            </div>
         </div>
-        <div class="card-body">
-            @if (Model?.Notes == null || !Model.Notes.Any())
-            {
-                <p class="text-muted">Aucune note pour ce patient.</p>
-            }
-            else
-            {
-                @foreach (var note in Model.Notes)
-                {
-                    <div style="white-space: pre-wrap;">@note.Content</div>
+
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h3 class="mb-0">Notes du médecin</h3>
+            </div>
+            <div class="card-body">
+                @{
+                    var notes = Model.Notes;
                 }
-            }
+                @if (notes == null || !notes.Any())
+                {
+                    <p class="text-muted">Aucune note pour ce patient.</p>
+                }
+                else
+                {
+                    @foreach (var note in notes)
+                    {
+                        <div style="white-space: pre-wrap;">@note.Content</div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="card shadow">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">Ajouter une observation</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddNote" method="post">
+
+                    <input type="hidden" name="PatientId" value="@Model.Patient.Id" />
+                    <input type="hidden" name="PatientName" value="@Model.Patient.LastName @Model.Patient.FirstName" />
+
+                    <div class="mb-3">
+                        <textarea name="Content" class="form-control" rows="4" placeholder="Saisissez les notes de la visite en cours" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Enregistrer la note</button>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="card shadow">
-        <div class="card-header bg-light">
-            <h4 class="mb-0">Ajouter une observation</h4>
-        </div>
-        <div class="card-body">
-            <form asp-action="AddNote" method="post">
-
-                <input type="hidden" name="PatientId" value="@Model.Patient.Id" />
-                <input type="hidden" name="PatientName" value="@Model.Patient.LastName @Model.Patient.FirstName" />
-
-                <div class="mb-3">
-                    <textarea name="Content" class="form-control" rows="4" placeholder="Saisissez les notes de la visite en cours" required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-success">Enregistrer la note</button>
-            </form>
-        </div>
-    </div>
-</div>
+}
 
