@@ -147,10 +147,20 @@ namespace FrontendService.Controllers
             var notes = JsonSerializer.Deserialize<List<NoteViewModel>>(notesJson,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<NoteViewModel>();
 
+            var riskResponse = await client.GetAsync($"/api/risk/patient/{id}");
+            var riskLevel = string.Empty;
+            if (riskResponse.IsSuccessStatusCode)
+            {
+                var riskJson = await riskResponse.Content.ReadAsStringAsync();
+                var riskObj = JsonSerializer.Deserialize<JsonElement>(riskJson);
+                riskLevel = riskObj.GetProperty("riskLevel").GetString() ?? string.Empty;
+            }
+
             var viewModel = new PatientDetailsViewModel
             {
                 Patient = patient!,
-                Notes = notes
+                Notes = notes,
+                RiskLevel = riskLevel
             };
 
             return View(viewModel);

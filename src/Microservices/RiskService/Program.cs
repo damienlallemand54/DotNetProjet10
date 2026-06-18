@@ -1,22 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
-using NoteService.Data;
-using NoteService.Repositories;
-using NoteService.Services;
+using RiskService.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDB")!;
-var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"]!;
+builder.Services.AddHttpClient("GatewayClient", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["GatewayUrl"]!);
+});
 
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
-builder.Services.AddScoped<IMongoDatabase>(sp =>
-    sp.GetRequiredService<IMongoClient>().GetDatabase(mongoDatabaseName));
-
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
-builder.Services.AddScoped<INoteManagementService, NoteManagementService>();
+builder.Services.AddScoped<IRiskAssessmentService, RiskAssessmentService>();
 builder.Services.AddControllers();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -38,12 +32,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-    await NoteSeeder.SeedAsync(database);
-}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

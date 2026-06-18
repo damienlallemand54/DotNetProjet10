@@ -13,12 +13,46 @@
 }
 else
 {
+    string alertClass = "alert-secondary";
+    string riskText = "Évaluation indisponible";
+    string riskIcon = "bi-question-circle";
+
+    switch (Model.RiskLevel?.Replace(" ", "").ToLowerInvariant())
+    {
+        case "none":
+            alertClass = "alert-success";
+            riskText = "Aucun risque (None)";
+            riskIcon = "bi-check-circle-fill";
+            break;
+        case "borderline":
+            alertClass = "alert-warning text-dark";
+            riskText = "Risque limité (Borderline)";
+            riskIcon = "bi-exclamation-triangle-fill";
+            break;
+        case "indanger":
+            alertClass = "alert-danger";
+            riskText = "Danger (In Danger)";
+            riskIcon = "bi-exclamation-octagon-fill";
+            break;
+        case "earlyonset":
+            alertClass = "alert-danger border border-3 border-danger fw-bold shadow-sm";
+            riskText = "Apparition précoce (Early onset)";
+            riskIcon = "bi-shield-fill-x";
+            break;
+    }
+
     <div class="container mt-4">
         <div class="card shadow mb-4">
             <div class="card-header bg-primary text-white">
                 <h2 class="mb-0">Dossier patient — @Model.Patient.LastName @Model.Patient.FirstName</h2>
             </div>
             <div class="card-body">
+                <div class="alert @alertClass d-flex align-items-center mb-4" role="alert">
+                    <i class="bi @riskIcon me-2 fs-4"></i>
+                    <div>
+                        <strong class="fs-5">Statut Diabète :</strong> <span class="fs-5">@riskText</span>
+                    </div>
+                </div>
                 <dl class="row">
                     <dt class="col-sm-3">Nom</dt>
                     <dd class="col-sm-9">@Model.Patient.LastName</dd>

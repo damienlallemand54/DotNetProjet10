@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PatientService.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PatientController : ControllerBase
