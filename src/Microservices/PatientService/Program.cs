@@ -11,7 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<PatientDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null);
+    }));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -42,8 +48,11 @@ using (var scope = app.Services.CreateScope())
     // On récupère PatientDbContext
     var context = scope.ServiceProvider.GetRequiredService<PatientDbContext>();
 
-    // On crée la base Projet10_PatientDb et la table Patient dans Docker
-    context.Database.Migrate();
+    // Si elle n'existe pas, on crée la base Projet10_PatientDb et la table Patient dans Docker
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
 
     // On utilise les patients tests pour remplir la bdd
     await DataSeeder.SeedAsync(context);

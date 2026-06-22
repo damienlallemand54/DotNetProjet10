@@ -5,7 +5,13 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null);
+    }));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -26,8 +32,11 @@ using (var scope = app.Services.CreateScope())
     // On récupère AuthDbContext
     var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
 
-    // On crée la base Projet10_AuthDb et les tables associées dans Docker
-    context.Database.Migrate();
+    // Si elle n'existe pas, on crée la base Projet10_AuthDb et les tables associées dans Docker
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
 
     // Seed utilisateur admin
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
