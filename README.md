@@ -37,6 +37,10 @@ Actions mises en place pour réduire l'impact environnemental et optimiser les r
 - **Dépendances minimalistes :** Chaque microservice est isolé et ne charge que les bibliothèques dont il a strictement besoin.
 - **Images Docker légères :** Utilisation des images de runtime optimisées `mcr.microsoft.com/dotnet/aspnet`.
 
+Suggestion d'évolution future : 
+
+- **Compilation Native AOT (Ahead-Of-Time) :** Passer la compilation des microservices .NET en mode Native AOT.
+
 ## 📅 Sprints & Évolution
 
 - **Sprint 1** : Création de PatientService, GatewayService, AuthService et du Frontend MVC (liste + détail patient).
